@@ -34,3 +34,107 @@ form:
         0: Disabled
       validate:
         type: bool
+
+    player_parameters:
+      type: section
+      title: Player parameters
+      text: "If the owner of a video is a Plus member, some of these settings may be overridden by their preferences."
+      underline: true
+      fields:
+
+          player_parameters.autopause:
+            type: toggle
+            label: Autopause
+            help: Enables or disables pausing this video when another video is played.
+            highlight: 1
+            default: 1
+            options:
+              1: Enabled
+              0: Disabled
+            validate:
+              type: bool
+
+          player_parameters.autoplay:
+            type: toggle
+            label: Autoplay
+            help: Plays the video automatically on load. Note that this won’t work on some devices.
+            highlight: 1
+            default: 0
+            options:
+              1: Enabled
+              0: Disabled
+            validate:
+              type: bool
+
+          player_parameters.badge:
+            type: toggle
+            label: Badge
+            help: Enables or disables the badge on the video.
+            highlight: 1
+            default: 1
+            options:
+              1: Enabled
+              0: Disabled
+            validate:
+              type: bool
+
+          player_parameters.byline:
+            type: toggle
+            label: Byline
+            help: Shows the user’s byline on the video.
+            highlight: 1
+            default: 1
+            options:
+              1: Enabled
+              0: Disabled
+            validate:
+              type: bool
+
+          player_parameters.color:
+            type: colorpicker
+            label: Color
+            help: Specifies the color of the video controls.
+            highlight: 1
+            default: "#00adef"
+
+          player_parameters.loop:
+            type: toggle
+            label: Loop
+            help: Plays the video again when it reaches the end.
+            highlight: 1
+            default: 0
+            options:
+              1: Enabled
+              0: Disabled
+            validate:
+              type: bool
+
+          player_parameters.player_id:
+            type: text
+            label: Player ID
+            size: medium
+            help: A unique id for the player that will be passed back with all Javascript API responses.
+
+          player_parameters.portrait:
+            type: toggle
+            label: Portrait
+            help: Shows the user’s portrait on the video.
+            highlight: 1
+            default: 1
+            options:
+              1: Enabled
+              0: Disabled
+            validate:
+              type: bool
+
+          player_parameters.title:
+            type: toggle
+            label: Title
+            help: Show the title on the video.
+            highlight: 1
+            default: 1
+            options:
+              1: Enabled
+              0: Disabled
+            validate:
+              type: bool

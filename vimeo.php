@@ -16,14 +16,8 @@ class VimeoPlugin extends Plugin
     const VIMEO_REGEX = '(?:\S*)?:?\/{2}(?:\S*)vimeo.com(?:\/video)?\/(\d*)';
 
     /**
+     * Returns a list of events the plugins wants to listen to.
      * @return array
-     *
-     * The getSubscribedEvents() gives the core a list of events
-     *     that the plugin wants to listen to. The key of each
-     *     array section is the event that the plugin listens to
-     *     and the value (in the form of an array) contains the
-     *     callable (or function) as well as the priority. The
-     *     higher the number the higher the priority.
      */
     public static function getSubscribedEvents()
     {
@@ -40,6 +34,7 @@ class VimeoPlugin extends Plugin
         // Don't proceed if we are in the admin plugin
         if ($this->isAdmin()) return;
 
+        // Enable the events we are interested in
         $this->enable([
           'onPageContentRaw' => ['onPageContentRaw', 0],
           'onAssetsInitialized' => ['onAssetsInitialized', 0],
@@ -49,14 +44,11 @@ class VimeoPlugin extends Plugin
     }
 
     /**
-     * Do some work for this event, full details of events can be found
-     * on the learn site: http://learn.getgrav.org/plugins/event-hooks
-     *
-     * @param Event $e
+     * After a page has been found, header processed, but content not processed.
+     * @param Event $e Event
      */
     public function onPageContentRaw(Event $e)
     {
-
         $page = $e['page'];
         $config = $this->mergeConfig($page, true);
         if (!$config->get('enabled')) return;
@@ -71,8 +63,8 @@ class VimeoPlugin extends Plugin
 
             // build the replacement embed HTML string
             $replace = $twig->processTemplate('partials/vimeo.html.twig', [
-              'parameters' => $config->get('parameters'),
               'video_id'   => $matches[1],
+              'player_parameters' => $config->get('player_parameters', [])
             ]);
 
             // do the replacement
@@ -84,7 +76,7 @@ class VimeoPlugin extends Plugin
     }
 
     /**
-     * Add Vimeo Twig Extension
+     * Add Vimeo twig extension
      */
     public function onTwigExtensions()
     {
@@ -92,6 +84,9 @@ class VimeoPlugin extends Plugin
         $this->grav['twig']->twig->addExtension(new VimeoTwigExtension());
     }
 
+    /**
+     * Add Built-in CSS if wanted
+     */
     public function onAssetsInitialized()
     {
         if (!$this->isAdmin() && $this->config->get('plugins.vimeo.built_in_css')) {
@@ -99,6 +94,9 @@ class VimeoPlugin extends Plugin
         }
     }
 
+    /**
+     * Add plugin templates to twig path
+     */
     public function onTwigTemplatePaths()
     {
         $this->grav['twig']->twig_paths[] = __DIR__ . '/templates';

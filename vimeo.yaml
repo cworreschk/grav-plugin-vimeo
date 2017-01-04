@@ -1,2 +1,13 @@
 enabled: true
 built_in_css: true
+
+player_parameters:
+  autopause: true
+  autoplay: false
+  badge: true
+  byline: true
+  color: "#00adef"
+  loop: false
+  player_id: ""
+  portrait: true
+  title: true
