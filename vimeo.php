@@ -1,7 +1,9 @@
 <?php
+
 namespace Grav\Plugin;
 
 use Grav\Common\Plugin;
+use Grav\Plugin\Vimeo\Twig\VimeoTwigExtension;
 use RocketTheme\Toolbox\Event\Event;
 
 /**
@@ -10,6 +12,9 @@ use RocketTheme\Toolbox\Event\Event;
  */
 class VimeoPlugin extends Plugin
 {
+
+    const VIMEO_REGEX = '(?:\S*)?:?\/{2}(?:\S*)vimeo.com(?:\/video)?\/(\d*)';
+
     /**
      * @return array
      *
@@ -23,7 +28,7 @@ class VimeoPlugin extends Plugin
     public static function getSubscribedEvents()
     {
         return [
-            'onPluginsInitialized' => ['onPluginsInitialized', 0]
+          'onPluginsInitialized' => ['onPluginsInitialized', 0]
         ];
     }
 
@@ -33,13 +38,13 @@ class VimeoPlugin extends Plugin
     public function onPluginsInitialized()
     {
         // Don't proceed if we are in the admin plugin
-        if ($this->isAdmin()) {
-            return;
-        }
+        if ($this->isAdmin()) return;
 
-        // Enable the main event we are interested in
         $this->enable([
-            'onPageContentRaw' => ['onPageContentRaw', 0]
+          'onPageContentRaw' => ['onPageContentRaw', 0],
+          'onAssetsInitialized' => ['onAssetsInitialized', 0],
+          'onTwigExtensions'    => ['onTwigExtensions', 0],
+          'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0],
         ]);
     }
 
@@ -51,13 +56,51 @@ class VimeoPlugin extends Plugin
      */
     public function onPageContentRaw(Event $e)
     {
-        // Get a variable from the plugin configuration
-        $text = $this->grav['config']->get('plugins.vimeo.text_var');
 
-        // Get the current raw content
-        $content = $e['page']->getRawContent();
+        $page = $e['page'];
+        $config = $this->mergeConfig($page, true);
+        if (!$config->get('enabled')) return;
 
-        // Prepend the output with the custom text and set back on the page
-        $e['page']->setRawContent($text . "\n\n" . $content);
+        // Function
+        $twig = $this->grav['twig'];
+        $function = function ($matches) use ($twig, $config) {
+            $search = $matches[0];
+
+            // double check to make sure we found a valid Vimeo video ID
+            if (!isset($matches[1])) return $search;
+
+            // build the replacement embed HTML string
+            $replace = $twig->processTemplate('partials/vimeo.html.twig', [
+              'parameters' => $config->get('parameters'),
+              'video_id'   => $matches[1],
+            ]);
+
+            // do the replacement
+            return str_replace($search, $replace, $search);
+        };
+
+        $raw_content = $page->getRawContent();
+        $page->setRawContent($this->parseLinks($raw_content, $function, static::VIMEO_REGEX));
+    }
+
+    /**
+     * Add Vimeo Twig Extension
+     */
+    public function onTwigExtensions()
+    {
+        require_once __DIR__ . '/classes/Twig/VimeoTwigExtension.php';
+        $this->grav['twig']->twig->addExtension(new VimeoTwigExtension());
+    }
+
+    public function onAssetsInitialized()
+    {
+        if (!$this->isAdmin() && $this->config->get('plugins.vimeo.built_in_css')) {
+            $this->grav['assets']->add('plugin://vimeo/css/vimeo.css');
+        }
+    }
+
+    public function onTwigTemplatePaths()
+    {
+        $this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
     }
 }

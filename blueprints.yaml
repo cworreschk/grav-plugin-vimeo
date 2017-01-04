@@ -1,12 +1,12 @@
 name: Vimeo
 version: 0.1.0
-description: Vimeo Plugin for Grav
-icon: plug
+description: "**Vimeo** is a plugin that converts markdown links into responsive embeds."
+icon: vimeo
 author:
   name: Christian Worreschk
   email: cw@marsec.de
 homepage: https://github.com/christian-worreschk/grav-plugin-vimeo
-keywords: grav, plugin, etc
+keywords: grav, plugin, vimeo, markdown, video
 bugs: https://github.com/christian-worreschk/grav-plugin-vimeo/issues
 docs: https://github.com/christian-worreschk/grav-plugin-vimeo/blob/develop/README.md
 license: MIT
@@ -24,7 +24,13 @@ form:
         0: Disabled
       validate:
         type: bool
-    text_var:
-      type: text
-      label: Text Variable
-      help: Text to add to the top of a page
+    built_in_css:
+      type: toggle
+      label: Use built in CSS
+      highlight: 1
+      default: 1
+      options:
+        1: Enabled
+        0: Disabled
+      validate:
+        type: bool
