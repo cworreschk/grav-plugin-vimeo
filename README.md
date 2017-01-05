@@ -96,7 +96,7 @@ This will be converted into the following embeded HTML:
 </div>
 ```
 
-### Twig
+## Twig
 
 This plugin offers two [Twig](http://twig.sensiolabs.org) functions that can be used. `vimeo_embed_url()` and `vimeo_embed_video()`
  
