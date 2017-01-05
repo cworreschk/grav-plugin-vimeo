@@ -1,12 +1,12 @@
 name: Vimeo
-version: 0.1.0
-description: "**Vimeo** is a plugin that converts markdown links into responsive embeds."
+version: 1.0.0
+description: "**Vimeo** is a plugin that converts markdown video links into the [Vimeo](https://vimeo.com) Universal Embed Code."
 icon: vimeo
 author:
   name: Christian Worreschk
   email: cw@marsec.de
 homepage: https://github.com/cworreschk/grav-plugin-vimeo
-keywords: vimeo, markdown, video
+keywords: vimeo, markdown, video, embed, iframe
 bugs: https://github.com/cworreschk/grav-plugin-vimeo/issues
 docs: https://github.com/cworreschk/grav-plugin-vimeo/blob/master/README.md
 license: MIT

@@ -4,9 +4,9 @@ The **Vimeo** Plugin for [Grav CMS](http://github.com/getgrav/grav) converts mar
 
 ### Features
 - Simply embed Vimeo videos and configure the player
-- Possibility to set the player parameters for each page differently
+- Override the player parameters for each page
 - Button to add Vimeo videos in the content editor
-- Twig functions
+- Twig functions to embed Vimeo videos in your templates
 - Multi-Language Support
 
 ## Installation

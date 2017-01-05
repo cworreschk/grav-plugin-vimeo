@@ -1,5 +1,9 @@
-# v0.1.0
-##  01/03/2017
+# v1.0.0
+##  01/05/2017
 
 1. [](#new)
-    * ChangeLog started...
+    * Embed Vimeo videos and configure the player
+    * Override the player parameters for each page
+    * Button to add Vimeo videos in the content editor
+    * Twig functions to embed Vimeo videos in your templates
+    * Multi-Language Support
