@@ -55,23 +55,38 @@ class VimeoTwigExtension extends \Twig_Extension
     {
         return [
           new \Twig_SimpleFunction('vimeo_embed_url', [$this, 'embedUrl']),
+          new \Twig_SimpleFunction('vimeo_embed_video', [$this, 'embedVideo']),
         ];
     }
 
     /**
-     * Build the Vimeo embed url
+     * Builds the Vimeo embed url
      * @param string $video_id Vimeo Video ID
      * @param array $params Player parameters
      * @return string
      */
-    public function embedUrl($video_id, array $params = [])
+    public function embedUrl($video_id, $params = [])
     {
         $url = static::VIMEO_PLAYER_URL.$video_id;
         $params = $this->filterParameters($params);
-        if ((!empty($params)) && ($query = http_build_query($params))) {
-            $url.= "?{$query}";
-        }
+        if ((!empty($params)) && ($query = http_build_query($params))) $url.= "?{$query}";
+
         return $url;
     }
 
+    /**
+     * Builds the Vimeo embed iframe
+     * @param string $video_id Vimeo Video ID
+     * @param array $params Player parameters
+     * @param bool $div Surrounds the iframe code with a div element
+     * @return string
+     */
+    public function embedVideo($video_id, $params = [], $div=true)
+    {
+        $url = $this->embedUrl($video_id, $params);
+        $code = "<iframe src=\"{$url}\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
+        if ($div) $code = "<div class=\"grav-vimeo\">{$code}</div>";
+
+        return $code;
+    }
 }
