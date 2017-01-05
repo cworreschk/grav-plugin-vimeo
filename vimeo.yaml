@@ -1,11 +1,10 @@
 enabled: true
-built_in_css: true
+plugin_css: true
 editor_button: true
 
 player_parameters:
   autopause: true
   autoplay: false
-  badge: true
   byline: true
   color: "#00adef"
   loop: false

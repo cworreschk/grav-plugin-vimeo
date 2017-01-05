@@ -60,7 +60,7 @@ class VimeoPlugin extends Plugin
      */
     public function onAssetsInitialized()
     {
-        if (!$this->isAdmin() && $this->config->get('plugins.vimeo.built_in_css')) {
+        if (!$this->isAdmin() && $this->config->get('plugins.vimeo.plugin_css')) {
             $this->grav['assets']->add('plugin://vimeo/css/vimeo.css');
         }
 
