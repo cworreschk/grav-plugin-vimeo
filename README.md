@@ -111,3 +111,11 @@ This function builds and returns the full Vimeo embed iframe snippet.
   - `parameters` : An optional `array` of player parameters. See `player_parameters` in the configuration file.
   - `div` : If set to `true`, the iframe HTML code will be surrounded by a div element with the class `grav-vimeo`. 
 
+## Contributing
+The **Vimeo Grav Plugin** follows the [GitFlow branching model](http://nvie.com/posts/a-successful-git-branching-model), from development to release. The ```master``` branch always reflects a production-ready state while the latest development is taking place in the ```develop``` branch.
+
+Each time you want to work on a fix or a new feature, create a new branch based on the ```develop``` branch: ```git checkout -b BRANCH_NAME develop```. Only pull requests to the ```develop``` branch will be merged.
+
+## Copyright and license
+
+Copyright &copy; 2017 Christian Worreschk under the [MIT Licence](http://opensource.org/licenses/MIT). See [README](LICENSE).
