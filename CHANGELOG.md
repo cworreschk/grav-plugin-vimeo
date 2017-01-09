@@ -1,3 +1,9 @@
+# v1.0.1
+##  01/09/2017
+
+1. [](#improved)
+    * Added french translation (@MATsxm)
+
 # v1.0.0
 ##  01/05/2017
 
