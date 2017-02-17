@@ -13,6 +13,8 @@ use RocketTheme\Toolbox\Event\Event;
 class VimeoPlugin extends Plugin
 {
 
+    protected $locale;
+
     const VIMEO_REGEX = '(?:\S*)?:?\/{2}(?:\S*)vimeo.com(?:\/video)?\/(\d*)';
 
     /**
@@ -22,8 +24,8 @@ class VimeoPlugin extends Plugin
     public static function getSubscribedEvents()
     {
         return [
-          'onPluginsInitialized' => ['onPluginsInitialized', 0],
-          'onAssetsInitialized' => ['onAssetsInitialized', 0]
+            'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onAssetsInitialized'  => ['onAssetsInitialized', 0]
         ];
     }
 
@@ -32,27 +34,35 @@ class VimeoPlugin extends Plugin
      */
     public function onPluginsInitialized()
     {
+        $this->initializeLocale();
+
         // Don't proceed if we are in the admin plugin
         if ($this->isAdmin()) return;
 
         // Enable the events we are interested in
         $this->enable([
-          'onPageContentRaw' => ['onPageContentRaw', 0],
-          'onTwigExtensions'    => ['onTwigExtensions', 0],
-          'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0],
+            'onPageContentRaw'    => ['onPageContentRaw', 0],
+            'onTwigExtensions'    => ['onTwigExtensions', 0],
+            'onTwigTemplatePaths' => ['onTwigTemplatePaths', 0],
         ]);
     }
 
-    /**
-     * Returns the plugins translations for the currently logged in user or by the given language
-     * @param string $locale
-     * @return array
-     */
-    private function getPluginTranslations($locale='')
-    {
-        $locale = empty($locale) ? $this->grav['user']->get('language') : $locale;
-        if (!isset($this->grav['languages'][$locale]['PLUGIN_VIMEO'])) $locale = 'en'; // English is the fallback language
-        return $this->grav['languages'][$locale]['PLUGIN_VIMEO'];
+    private function initializeLocale() {
+        $locales = [];
+        $language = $this->grav['language'];
+
+        // Available Languages
+        if ($this->grav['user']->authenticated) $locales[] = $this->grav['user']->language;
+        if ($language->enabled())$locales[] = $language->getLanguage();
+        $locales[] = 'en';
+
+        $locales = array_unique(array_filter($locales));
+        foreach ($locales as $locale) {
+            if (isset($this->grav['languages'][$locale]['PLUGIN_VIMEO'])) {
+                $this->locale = $locale;
+                break;
+            }
+        }
     }
 
     /**
@@ -65,12 +75,13 @@ class VimeoPlugin extends Plugin
         }
 
         if ($this->isAdmin() && $this->config->get('plugins.vimeo.editor_button')) {
-            $plugin_translations = $this->getPluginTranslations(); // Workaround User/System language bug (this->grav['language']->translate doesn't work properly)
+            $plugin_translations = $this->grav['languages'][$this->locale]['PLUGIN_VIMEO'];
             $translations = [
-              'EDITOR_BUTTON_TOOLTIP' => $plugin_translations['EDITOR_BUTTON_TOOLTIP'],
-              'EDITOR_BUTTON_PROMPT' => $plugin_translations['EDITOR_BUTTON_PROMPT']
+                'EDITOR_BUTTON_TOOLTIP' => $plugin_translations['EDITOR_BUTTON_TOOLTIP'],
+                'EDITOR_BUTTON_PROMPT' => $plugin_translations['EDITOR_BUTTON_PROMPT']
             ];
-            $code = 'this.GravAdmin.translations.PLUGIN_VIMEO = '. json_encode($translations, JSON_UNESCAPED_SLASHES) .';';
+            $code = 'this.GravVimeoPlugin = this.GravVimeoPlugin || {};';
+            $code.= 'if (!this.GravVimeoPlugin.translations) this.GravVimeoPlugin.translations = '.json_encode($translations, JSON_UNESCAPED_SLASHES) .';';
             $this->grav['assets']->addInlineJs($code);
             $this->grav['assets']->add('plugin://vimeo/admin/editor-button/js/button.js');
         }
@@ -96,8 +107,8 @@ class VimeoPlugin extends Plugin
 
             // build the replacement embed HTML string
             $replace = $twig->processTemplate('partials/vimeo.html.twig', [
-              'video_id'   => $matches[1],
-              'player_parameters' => $config->get('player_parameters', [])
+                'video_id' => $matches[1],
+                'player_parameters' => $config->get('player_parameters', [])
             ]);
 
             // do the replacement
