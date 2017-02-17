@@ -1,3 +1,9 @@
+# v1.0.2
+##  02/17/2017
+
+1. [](#bugfix)
+    * Fixed a problem with the Grav Admin Plugin ([Issue #2](https://github.com/cworreschk/grav-plugin-vimeo/issues/2))
+
 # v1.0.1
 ##  01/09/2017
 
