@@ -1,5 +1,5 @@
 name: Vimeo
-version: 1.0.2
+version: 1.0.3
 description: "**Vimeo** is a plugin that converts markdown video links into the [Vimeo](https://vimeo.com) Universal Embed Code."
 icon: vimeo
 author:
